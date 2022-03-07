@@ -1,0 +1,208 @@
+{
+  "context.versionId": "44b3f6da-21f6-4aab-9d28-918f0dd98aca",
+  "context.priorVersionId": "3d029270-05e9-4a84-b717-89cbbed962d2",
+  "contextType": "DiagnosticReport",
+  "context": [
+    {
+      "key": "patient",
+      "reference": null,
+      "resource": {
+        "resourceType": "Patient",
+        "id": "755f50be15dd40e1b729d316c5b6a877",
+        "identifier": [
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MR"
+                }
+              ]
+            },
+            "value": "TEMPORARY"
+          }
+        ]
+      }
+    },
+    {
+      "key": "study",
+      "reference": null,
+      "resource": {
+        "resourceType": "ImagingStudy",
+        "id": "afecf935c5d744e2930773b47b00605d",
+        "identifier": [
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "ACSN"
+                }
+              ]
+            },
+            "value": "GetContentTest"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/755f50be15dd40e1b729d316c5b6a877"
+        }
+      }
+    },
+    {
+      "key": "report",
+      "reference": null,
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "2a70b9746f1c4f96b1517a72e13e4e62",
+        "meta": {
+          "versionId": "1"
+        },
+        "status": "partial",
+        "imagingStudy": [
+          {
+            "reference": "ImagingStudy/afecf935c5d744e2930773b47b00605d"
+          }
+        ]
+      }
+    },
+    {
+      "key": "content",
+      "reference": null,
+      "resource": {
+        "resourceType": "Bundle",
+        "type": "transaction",
+        "entry": [
+          {
+            "fullUrl": "",
+            "resource": {
+              "resourceType": "Observation",
+              "id": "finding1",
+              "status": "final",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://nuancepowerscribe.com/saf",
+                    "code": "1024",
+                    "display": "Intracranial hemorrhage"
+                  },
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "1386000",
+                    "display": "Intracranial hemorrhage"
+                  }
+                ]
+              },
+              "note": [
+                {
+                  "text": "Intracranial hemorrhage seen on series 4 instance 3 with 92.5% probability."
+                }
+              ],
+              "bodySite": {
+                "coding": [
+                  {
+                    "system": "http://www.radlex.org",
+                    "code": "RID6390",
+                    "display": "Brain region"
+                  }
+                ]
+              },
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://dicom.nema.org/resources/ontology/DCM",
+                        "code": "113607",
+                        "display": "Series number"
+                      }
+                    ]
+                  },
+                  "valueString": "4"
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://dicom.nema.org/resources/ontology/DCM",
+                        "code": "112002",
+                        "display": "Series UID"
+                      }
+                    ]
+                  },
+                  "valueString": "2.16.124.113543.6003.2588828330.45298.17418.2723805630"
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://dicom.nema.org/resources/ontology/DCM",
+                        "code": "113609",
+                        "display": "Instance number"
+                      }
+                    ]
+                  },
+                  "valueString": "3"
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://dicom.nema.org/resources/ontology/DCM",
+                        "code": "110181",
+                        "display": "SOP Class UID"
+                      }
+                    ]
+                  },
+                  "valueString": "2.16.124.113543.6003.189642796.63084.16748.2599092903"
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://nuancepowerscribe.com/ai",
+                        "code": "90090301",
+                        "display": "Finding Qualifier"
+                      }
+                    ]
+                  },
+                  "valueString": "present"
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://nuancepowerscribe.com/ai",
+                        "code": "90090302",
+                        "display": "Finding Probability"
+                      }
+                    ]
+                  },
+                  "valueQuantity": {
+                    "value": 92.5,
+                    "unit": "percent",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "percent"
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://nuancepowerscribe.com/ai",
+                        "code": "ai-finding-disposition",
+                        "display": "AI Finding Disposition"
+                      }
+                    ]
+                  },
+                  "valueString": "accepted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -37,7 +37,7 @@ namespace Nuance.PowerCast.TestPowerCast
         private BackgroundWorker _webSocketReader;
         private BackgroundWorker _callbackReader;
         private readonly static HttpListener _listener = new HttpListener();
-        private string _accessToken = null;
+        private string _accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9EYzNOakU0TTBKRE5FUTJOREZDUWtFMFJFVkZORUV6T0RFeFJFUkJSREJCT1VJMFFUZ3hRdyJ9.eyJodHRwczovL251YW5jZWhkcC5jb20vYWxpYXMiOiJBcHBsaWNhdGlvbnxQb3dlckNhc3QgSHViIGFuZCBBZG1pbiBBUEkgKFRlc3QgQXBwbGljYXRpb24pIiwiaXNzIjoiaHR0cHM6Ly9udWFuY2VoZHBkZXYuYXV0aDAuY29tLyIsInN1YiI6InJTR1hYV0FZUzQ4V3pKeWhmaGJQWWZaNW10YzNlWEN0QGNsaWVudHMiLCJhdWQiOiJodHRwczovL251YW5jZWhkcC5jb20vUG93ZXJDYXN0L0h1YiIsImlhdCI6MTY0NjQwODk4NiwiZXhwIjoxNjQ2NDk1Mzg2LCJhenAiOiJyU0dYWFdBWVM0OFd6SnloZmhiUFlmWjVtdGMzZVhDdCIsInNjb3BlIjoiQWRtaW4iLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.Vs75PzkZyXeZDm_kU6KqHm3U2yz4LzS81FKYUjPpC5g5LwYI2k1yDYwYAQJH9Kfxt6utF08NWBaf0fmqG_DlL2YrB0REGUrxDm6m9GBCU1ryUMq_0V04plR5V3NlZw9IF45OSeg0ndDRjEBoP8uputmPDf1XQrTafcEs4XfRtAivz4IpTLd8uoS8ZHChG0xI697cmT790V9CCYq2yJ_nKBOZOOj7gCj0dJQttVKbAWf5yr60SNMFKZXtJ8A3LL8KM5gbzrJ2vXO1f4gbVwcpMsTQPqsvS_tGcPwEKbe0ZRhlFzNn4i8t9cNXYlukN3RAAoJ8zqlgIjlr-ufRG-jjow";
         private readonly string _connectorUrl;
         private readonly string _subscribeCallbackUrl;
         private readonly string _auth0HubAudience;
@@ -96,11 +96,15 @@ namespace Nuance.PowerCast.TestPowerCast
             FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
             this.Text = $"{fileVersion.ProductName} ({fileVersion.FileVersion})";
         }
-
-        private async Task<string> GetToken()
+        public static string Base64Decode(string base64EncodedData)
         {
-            string token = null;
-            HttpResponseMessage response;
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+        private string GetToken()
+        {
+            string token = null;//= "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qTkVRa014TkVVd1F6UXdRVFJFUVRBNU9UWTNRalUzT1RoQk16QXdPRUpCTXpNeVJqWkJRZyJ9.eyJodHRwczovL251YW5jZWhkcC5jb20vYWxpYXMiOiJBcHBsaWNhdGlvbnxOdWFuY2VQb3dlckNhc3QiLCJpc3MiOiJodHRwczovL251YW5jZWhkcC5hdXRoMC5jb20vIiwic3ViIjoiM0lPVkRpU2xrT0ZQODBNMDM3dld5bW9PNW5vWlZEaGJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbnVhbmNlaGRwLmNvbS9Qb3dlckNhc3QvQWRtaW5pc3RyYXRvciIsImlhdCI6MTY0NTUzNTg3MywiZXhwIjoxNjQ1NjIyMjczLCJhenAiOiIzSU9WRGlTbGtPRlA4ME0wMzd2V3ltb081bm9aVkRoYiIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsInBlcm1pc3Npb25zIjpbXX0.lAVdGnPlmEaeKrmv_e73kku5zSog5qzQHrjYVL0OmGxIZp9 - n40nC3QsyOI5o2v - Bu_rT6X7RJBx_5JVFzQv1te2_8i - ZZjTHostmbTYTWcmMZgoTIL4_lRVuw6fkUlMCgMuuZCn - PoRxlZS6To_BSpRlFPrfC - g - BIrY0gRfPBFNevDpalAfilDoOvLE7lfjyaoGoCjDzuO0iKIgOjye962c7FIZIp9C1niUKDny_2K_xUeB6qRooiX4mmU82NMOa0 - Kk64khyBASJk4nzrF7TBTnXYb27cmOs6h5a48fPv6lWetV6g5hSypU0iFRHSD_uryphZ9CGzxPe4kMcvrg";
+            /*HttpResponseMessage response;
             UriBuilder urlBuilder = new UriBuilder(_config.token_endpoint);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, urlBuilder.Uri);
             Dictionary<string, string> auth = new Dictionary<string, string>
@@ -119,10 +123,11 @@ namespace Nuance.PowerCast.TestPowerCast
             }
             else
             {
-                string s = await response.Content.ReadAsStringAsync();
-                var jwt = JObject.Parse(s);
-                token = jwt["access_token"].ToString();
-            }
+                string s = await response.Content.ReadAsStringAsync(); 
+            string s = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9EYzNOakU0TTBKRE5FUTJOREZDUWtFMFJFVkZORUV6T0RFeFJFUkJSREJCT1VJMFFUZ3hRdyJ9.eyJodHRwczovL251YW5jZWhkcC5jb20vYWxpYXMiOiJBcHBsaWNhdGlvbnxQb3dlckNhc3QgSHViIGFuZCBBZG1pbiBBUEkgKFRlc3QgQXBwbGljYXRpb24pIiwiaXNzIjoiaHR0cHM6Ly9udWFuY2VoZHBkZXYuYXV0aDAuY29tLyIsInN1YiI6InJTR1hYV0FZUzQ4V3pKeWhmaGJQWWZaNW10YzNlWEN0QGNsaWVudHMiLCJhdWQiOiJodHRwczovL251YW5jZWhkcC5jb20vUG93ZXJDYXN0L0h1YiIsImlhdCI6MTY0NTU0OTMxOCwiZXhwIjoxNjQ1NjM1NzE4LCJhenAiOiJyU0dYWFdBWVM0OFd6SnloZmhiUFlmWjVtdGMzZVhDdCIsInNjb3BlIjoiQWRtaW4iLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.Sduz8LT_XvSw3kNsQJhnaSNSD7rPbfSmSsxGp7gCB1Jpvhx1KwCAoIOU4FRdCZtiEsUVbG45WsHaqQQVc7W068Zq231Wpd8yiW - 6i999R_Qrp_1r4zKMXJsO3bkA2sphHWq6Q3zutzuHfaTDxWGl5RDLa9u7sB - KzNADsU_Uf3i1kqxcKo8_gwwGtyxOpryYDtrPYWELxLqGgnqlkIgMG4BI3Ar - 5eY_tV1Pqm95Qtot80kcLCtBP8874HwaZTt0AcpwdrQSb9nVLFvjcTZhu5k2dIbxkVSC0S_sjns2hVXT5JnbhSIYCnKuHTm_ - PyTBW5ACFeskOh037eNr7Xltw";
+            var jwt = JObject.Parse(Base64Decode(s));
+            token = jwt.ToString();   /* ["access_token"].ToString();
+            }*/
             return token;
         }
 
@@ -438,18 +443,18 @@ namespace Nuance.PowerCast.TestPowerCast
         {
             HttpResponseMessage response = new HttpResponseMessage();
             if (null == _accessToken)
-                _accessToken = await GetToken();
+                _accessToken =  GetToken();
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this._accessToken);
             try
             {
                 response = await _httpClient.SendAsync(request);
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+               /* if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     // get a new token and try again
-                    this._accessToken = await GetToken();
+                    this._accessToken =  GetToken();
                     request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this._accessToken);
                     response = await _httpClient.SendAsync(request);
-                }
+                } */
             }
             catch (Exception ex)
             {
@@ -734,7 +739,7 @@ namespace Nuance.PowerCast.TestPowerCast
 
         private async void btnGetConfig_Click(object sender, EventArgs e)
         {
-            Display("Getting configuration data...");
+            Display("Getting configuration data...");/*
             HttpResponseMessage response = null;
             UriBuilder urlBuilder = new UriBuilder($"{_connectorUrl}/configuration");
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, urlBuilder.Uri);
@@ -761,19 +766,22 @@ namespace Nuance.PowerCast.TestPowerCast
                     Display($"***** The request to get configuration data was not accepted: {(int)response.StatusCode} - {response.ReasonPhrase}");
                 }
                 else
-                {
+                {*/
                     Display("Configuration data received.");
-                    string configJson = await response.Content.ReadAsStringAsync();
-                    _config = JsonConvert.DeserializeObject<ConfigurationData>(configJson);
+            //string configJson = await response.Content.ReadAsStringAsync();
+            string configJson = System.IO.File.ReadAllText(Application.StartupPath.ToString() + @"\config.json");
+
+        _config = JsonConvert.DeserializeObject<ConfigurationData>(configJson);
                     txtConfigAuthUrl.Text = _config.authorization_endpoint;
                     txtConfigHubUrl.Text = _config.hub_endpoint;
                     txtConfigTokenUrl.Text = _config.token_endpoint;
                     txtConfigTopic.Text = _config.topic;
-                    txtHubUrl.Text = _config.hub_endpoint;
-                    txtTopic.Text = _config.topic;
+                    txtHubUrl.Text = "https://powercast.dev.nuancepowerscribe.com/api/hub";
+                    txtTopic.Text = "PowerCast.admin";
                     btnDownloadHubLogs.Enabled = true;
-                }
-            }
+            /*   }
+           }*/
+            _config.topic = "PowerCast.admin";
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
